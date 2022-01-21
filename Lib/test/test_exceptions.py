@@ -50,7 +50,7 @@ class ExceptionTests(unittest.TestCase):
             self.assertEqual(buf1, buf2)
             self.assertEqual(exc.__name__, excname)
 
-    def testRaising(self):
+    def test_raising(self):
         self.raise_catch(AttributeError, "AttributeError")
         self.assertRaises(AttributeError, getattr, sys, "undefined_attribute")
 
@@ -134,7 +134,7 @@ class ExceptionTests(unittest.TestCase):
 
         self.raise_catch(StopAsyncIteration, "StopAsyncIteration")
 
-    def testSyntaxErrorMessage(self):
+    def test_syntax_error_message(self):
         # make sure the right exception message is raised for each of
         # these code fragments
 
@@ -157,7 +157,7 @@ class ExceptionTests(unittest.TestCase):
         ckmsg(s, "'continue' not properly in loop")
         ckmsg("continue\n", "'continue' not properly in loop")
 
-    def testSyntaxErrorMissingParens(self):
+    def test_syntax_error_missing_parens(self):
         def ckmsg(src, msg, exception=SyntaxError):
             try:
                 compile(src, '<fragment>', 'exec')
@@ -214,7 +214,7 @@ class ExceptionTests(unittest.TestCase):
         check = self.check
         check('"\\\n"(1 for c in I,\\\n\\', 2, 2)
 
-    def testSyntaxErrorOffset(self):
+    def test_syntax_error_offset(self):
         check = self.check
         check('def fact(x):\n\treturn x!\n', 2, 10)
         check('1 +\n', 1, 4)
@@ -310,7 +310,7 @@ class ExceptionTests(unittest.TestCase):
         check('def f(*):\n  pass', 1, 7)
 
     @cpython_only
-    def testSettingException(self):
+    def test_setting_exception(self):
         # test that setting an exception at the C level works even if the
         # exception object can't be constructed.
 
@@ -406,7 +406,7 @@ class ExceptionTests(unittest.TestCase):
         with self.assertRaisesRegex(OSError, 'Windows Error 0x%x' % code):
             ctypes.pythonapi.PyErr_SetFromWindowsErr(code)
 
-    def testAttributes(self):
+    def test_attributes(self):
         # test that exception attributes are happy
 
         exceptionList = [
@@ -559,7 +559,7 @@ class ExceptionTests(unittest.TestCase):
                 e.__note__ = None
                 self.assertIsNone(e.__note__)
 
-    def testWithTraceback(self):
+    def test_with_traceback(self):
         try:
             raise IndexError(4)
         except:
@@ -580,7 +580,7 @@ class ExceptionTests(unittest.TestCase):
         self.assertIsInstance(e, MyException)
         self.assertEqual(e.__traceback__, tb)
 
-    def testInvalidTraceback(self):
+    def test_invalid_traceback(self):
         try:
             Exception().__traceback__ = 5
         except TypeError as e:
@@ -588,13 +588,13 @@ class ExceptionTests(unittest.TestCase):
         else:
             self.fail("No exception raised")
 
-    def testInvalidAttrs(self):
+    def test_invalid_attrs(self):
         self.assertRaises(TypeError, setattr, Exception(), '__cause__', 1)
         self.assertRaises(TypeError, delattr, Exception(), '__cause__')
         self.assertRaises(TypeError, setattr, Exception(), '__context__', 1)
         self.assertRaises(TypeError, delattr, Exception(), '__context__')
 
-    def testNoneClearsTracebackAttr(self):
+    def test_none_clears_traceback_attr(self):
         try:
             raise IndexError(4)
         except:
@@ -605,7 +605,7 @@ class ExceptionTests(unittest.TestCase):
         e.__traceback__ = None
         self.assertEqual(e.__traceback__, None)
 
-    def testChainingAttrs(self):
+    def test_chaining_attrs(self):
         e = Exception()
         self.assertIsNone(e.__context__)
         self.assertIsNone(e.__cause__)
@@ -621,7 +621,7 @@ class ExceptionTests(unittest.TestCase):
         self.assertIsNone(e.__context__)
         self.assertIsNone(e.__cause__)
 
-    def testChainingDescriptors(self):
+    def test_chaining_descriptors(self):
         try:
             raise Exception()
         except Exception as exc:
@@ -639,7 +639,7 @@ class ExceptionTests(unittest.TestCase):
         e.__suppress_context__ = False
         self.assertFalse(e.__suppress_context__)
 
-    def testKeywordArgs(self):
+    def test_keyword_args(self):
         # test that builtin exception don't take keyword args,
         # but user-defined subclasses can if they want
         self.assertRaises(TypeError, BaseException, a=1)
@@ -653,7 +653,7 @@ class ExceptionTests(unittest.TestCase):
         self.assertEqual(x.fancy_arg, 42)
 
     @no_tracing
-    def testInfiniteRecursion(self):
+    def test_infinite_recursion(self):
         def f():
             return f()
         self.assertRaises(RecursionError, f)
@@ -688,7 +688,7 @@ class ExceptionTests(unittest.TestCase):
             del e
         self.assertNotIn('e', locals())
 
-    def testExceptionCleanupState(self):
+    def test_exception_cleanup_state(self):
         # Make sure exception state is cleaned up as soon as the except
         # block is left. See #2507
 
@@ -2154,7 +2154,7 @@ class AttributeErrorTests(unittest.TestCase):
 
     def test_getattr_suggestions_invalid_args(self):
         class NonStringifyClass:
-            __str__ = None
+            __str__ = Noneg
             __repr__ = None
 
         class A:
