@@ -671,13 +671,20 @@ class ExceptionTests(unittest.TestCase):
         self.assertTrue(str(Exception('a')))
         self.assertTrue(str(Exception('a', 'b')))
 
-    def testExceptionCleanupNames(self):
+    def test_exception_cleanup_names(self):
         # Make sure the local variable bound to the exception instance by
         # an "except" statement is only visible inside the except block.
         try:
             raise Exception()
         except Exception as e:
-            self.assertTrue(e)
+            self.assertIsInstance(e, Exception)
+        self.assertNotIn('e', locals())
+
+        # Make sure the cleanup doesn't break if the variable is explicitly deleted.
+        try:
+            raise Exception()
+        except Exception as e:
+            self.assertIsInstance(e, Exception)
             del e
         self.assertNotIn('e', locals())
 
